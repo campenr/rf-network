@@ -26,8 +26,9 @@
 RF24 radio(9, 10);  // CE, CSN
 
 const uint8_t CHANNEL_COUNT = 126;
-uint8_t SCAN_VALUES[CHANNEL_COUNT];
-int LISTEN_DELAY = 128;  // microseconds
+uint8_t SCAN_VALUES [ CHANNEL_COUNT ];
+const uint8_t SCAN_REPITITIONS = 100;
+const uint8_t LISTEN_DELAY = 128;  // microseconds
 
 /** 
  * Setup
@@ -36,17 +37,9 @@ int LISTEN_DELAY = 128;  // microseconds
 
 void setup(void)
 {
-  printPreamble();
-  initRadio();
-  radio.printDetails();
-  Serial.println();
-}
-
-void printPreamble() {
   Serial.begin(115200);
-  printf_begin();
-  Serial.println("RF24 scanner");
-  Serial.println();
+  initRadio();
+  printPreamble();
 }
 
 RF24 initRadio() {  
@@ -63,17 +56,22 @@ RF24 initRadio() {
   return radio;
 }
 
+void printPreamble() {
+  printf_begin();
+  Serial.println("RF24 scanner");
+  Serial.println();
+  radio.printDetails();
+  Serial.println();
+}
+
 /** 
  * Loop
  */
 
 
 void loop(void) {
-
-  int repititions = 100;
-
   clearPreviousValues();
-  scanChannels(repititions);
+  scanChannels(SCAN_REPITITIONS);
   printValues();
 }
 
